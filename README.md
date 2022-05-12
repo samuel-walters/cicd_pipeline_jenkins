@@ -50,6 +50,17 @@ Multi Billion Dollar companies like Facebook, Netflix and Ebay have adopted Jenk
 
 ![](https://i.imgur.com/EQ8eodO.png)
 
+## SSH Set Up GitHub
+
+1. Open GitBash as an administrator.
+
+2. Go to your .ssh folder and paste in this command:
+
+    ssh-keygen -t rsa -b 4096 "yourgithubemail@hotmail.com".
+
+3. Enter the file name (lowercase, underscrolls).
+
+4. For passphrase, click enter twice.
 
 
 
