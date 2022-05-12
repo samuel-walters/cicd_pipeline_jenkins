@@ -56,11 +56,18 @@ Multi Billion Dollar companies like Facebook, Netflix and Ebay have adopted Jenk
 
 2. Go to your .ssh folder and paste in this command:
 
-    ssh-keygen -t rsa -b 4096 "yourgithubemail@hotmail.com".
+    ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 
 3. Enter the file name (lowercase, underscrolls).
 
 4. For passphrase, click enter twice.
+
+5. Copy the .pub file's content.
+
+6. Paste the content into GitHub SSH keys.
+
+
+
 
 
 
