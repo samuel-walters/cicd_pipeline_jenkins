@@ -48,23 +48,7 @@ Multi Billion Dollar companies like Facebook, Netflix and Ebay have adopted Jenk
 
 ## Diagram for setting up Jenkins with our app
 
-![](https://i.imgur.com/dqSuxR3.png)
-
-### Set Up Jenkins - Steps
-
-> 1. Code available in our localhost and GitHub repository.
-
-> 1. SSH set up from localhost to GitHub.
-
-> 2. Test the SSH connection.
-
-> 3. SSH set up from GitHub to Jenkins.
-
-> 4. Copy the code of our app (SCP).
-
-> 5. Run the provision.sh file.
-
-
+![](https://i.imgur.com/EQ8eodO.png)
 
 
 
