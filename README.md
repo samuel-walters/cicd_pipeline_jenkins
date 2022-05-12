@@ -67,6 +67,9 @@ Multi Billion Dollar companies like Facebook, Netflix and Ebay have adopted Jenk
 6. Paste the content into GitHub SSH keys.
 
 
+GITHUB - PUBLIC KEY
+
+JENKINS - PRIVATE KEY
 
 
 

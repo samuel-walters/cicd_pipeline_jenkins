@@ -32,4 +32,3 @@ end
 describe command('git --version') do
   its(:stdout) { should match /2\.7\../ }
 end
-
