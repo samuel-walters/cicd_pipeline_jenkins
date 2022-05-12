@@ -50,13 +50,13 @@ Multi Billion Dollar companies like Facebook, Netflix and Ebay have adopted Jenk
 
 ![](https://i.imgur.com/EQ8eodO.png)
 
-## SSH Set Up GitHub
+## SSH Set Up for GitHub
 
 1. Open GitBash as an administrator.
 
 2. Go to your .ssh folder and paste in this command:
 
-    ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+        ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 
 3. Enter the file name (lowercase, underscrolls).
 
@@ -67,20 +67,57 @@ Multi Billion Dollar companies like Facebook, Netflix and Ebay have adopted Jenk
 6. Paste the content into GitHub SSH keys.
 
 
-GITHUB - PUBLIC KEY
+## Set Up SSH from Jenkins to Github Repository
 
-JENKINS - PRIVATE KEY
+NOTE:
+* GitHub repository - PUBLIC KEY
+* Jenkins - PRIVATE KEY
 
+> 1. Create a new key in your ssh folder with `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`.
 
+> 2. Run this command on the public (.pub) key generated: `clip < ~/.ssh/eng110_cicd_sam.pub`.
 
+> 3. Go to `Settings` in your GitHub repository.
 
+> 4. Go to `Deploy Keys`.
 
+> 5. Add a key, and copy the contents from the `clip` command into the box. 
 
+> 6. On Jenkins, create a build.
 
+> 7. Remember naming conventions.
 
+> 8. Tick Discard old builds. Max # of builds to keep = 3.
 
+> 9. GitHub project - use the http link **NOT** ssh.
 
+> 10. Tick restrict where this project can be run.
 
+> 11. For Label Expression, type in `sparta-ubuntu-node` (might need to press backspace and fiddle around with it until it recognises the label).
+
+> 12. For Source Code Management, choose `Git`.
+
+> 13. For `Repository URL`, choose the repository's **SSH** link. 
+
+> 13. Run this command on the private key generated: `clip < ~/.ssh/eng110_cicd_sam`.
+
+> 14. Credientials: add a new key.
+
+> 15. Choose SSH Keys. Give it the same name as your private key (for example eng110_cicd_sam).
+
+> 16. Paste the private key's contents into the box.
+
+> 17. Make sure it is */main and not */master
+
+> 18. Tick Provide Node & npm bin/ folder to PATH
+
+> 19. Go to build - execute shell
+
+> 20. Type in these commands - make sure the path to your app folder is right:
+
+    cd app
+    npm instal
+    npm test
 
 
 
