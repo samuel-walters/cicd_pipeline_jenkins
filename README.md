@@ -22,7 +22,7 @@ Continuous delivery (CD) is an extension of continuous integration. It makes sur
 
 ![](https://miro.medium.com/max/1400/0*y2Pwj5q1aeZ6zweo.png)
 
-Continious Deployment goes one step further than continuous delivery. With continuous deployment, every single change that passes all stages of the production pipeline are released straight to the customer. Unlike continuous delivery, there is no human intervention at all, and no button has to be pressed to deploy the application. Only a failed test will prevent a new change being deployed to production.
+Continuous Deployment goes one step further than continuous delivery. With continuous deployment, every single change that passes all stages of the production pipeline are released straight to the customer. Unlike continuous delivery, there is no human intervention at all, and no button has to be pressed to deploy the application. Only a failed test will prevent a new change being deployed to production.
 
 ## Relationship between the CICD practices
 
@@ -140,3 +140,19 @@ NOTE:
 > 8. Click `Add webhook`.
 
 > 9. Test your webhook by pushing a commit to your GitHub repository. This should automatically trigger the Jenkins job to run.
+
+## CICD/CDE for Jenkins
+
+![](https://i.imgur.com/n2bDQnE.png)
+
+> 1. Create a new job called Sam_CI_merge.
+> 2. Create a dev branch on our localhost/GitHub.
+> 3. Push the new change from dev branch.
+> 4. If the tests passed trigger the job to merge the code from dev to main.
+> 5. Create a 3rd job to clone the code from main branch - deliver it to AWS EC2 to configure node app.
+> 6. To do this, SSH into the EC2 instance from Jenkins and install the required dependencies.
+> 7. Go to the app folder, and run `npm install` - then `nohup node app.js > /dev/null 2>&1 &`.
+> 8. The app should be available on public ip of ec2 instance - share the ip in the chat.
+
+### Blockers
+> 1. Look up how to not hang when jenkins script tries to connect to ec2 (as input is required here).
