@@ -145,9 +145,9 @@ NOTE:
 
 ![](https://i.imgur.com/n2bDQnE.png)
 
-> 1. Create a new job called Sam_CI_merge.
-> 2. Create a dev branch on our localhost/GitHub.
-> 3. Push the new change from dev branch.
+> 1. Create a dev branch on our localhost/GitHub.
+> 2. Create a new job called Sam_CI_merge.
+> 3. Make a new change in dev branch and push it.
 > 4. If the tests passed trigger the job to merge the code from dev to main.
 > 5. Create a 3rd job to clone the code from main branch - deliver it to AWS EC2 to configure node app.
 > 6. To do this, SSH into the EC2 instance from Jenkins and install the required dependencies.
@@ -161,4 +161,4 @@ test commit in dev
 another test
 another test
 test again
-testtt
+testttt
