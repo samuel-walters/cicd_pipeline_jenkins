@@ -156,9 +156,95 @@ NOTE:
 
 ### Blockers
 > 1. Look up how to not hang when jenkins script tries to connect to ec2 (as input is required here).
-dev branch
-test commit in dev
-another test
-another test
-test again
-testttttt
+
+## Job 1
+
+> 1. Name: `sam-continuous-integration`.
+
+> 2. Tick `Discard old builds` and choose 3 in `Max # of builds to keep`.
+
+> 3. Tick `GitHub project` and link your https repository location.
+
+> 4. Tick `Restrict where this project can be run` (`sparta-ubuntu-node`).
+
+> 5. Tick `Git`. Link your GitHub repository again (but in SSH format).
+
+> 6. Choose the right private key to unlock the repository's public key.
+
+> 7. Choose `*/dev` in branch.
+
+> 8. Tick `GithHub hook trigger`. 
+
+> 9. Click `Provide Node & npm bin/ folder to PATH`.\
+
+> 10. Go to `Build`, and choose `Execute shell`, set up with these commands:
+
+        cd app
+        npm install
+        npm test
+
+> 11. For `Post-build Actions`, choose `Sam_CI_merge` in `Build other projects`.
+
+> 12. Click save.
+
+## Job 2
+
+> 1. Name: `Sam-CI-merge
+
+> 2. Choose the GitHub settings again (and Discard old builds).
+
+> 3. For branch, choose `*/dev`.
+
+> 4. Go to `Additional Behaviours`, and add `origin` for `Name of repository`, and add `main` as `Branch to merge to`. 
+
+> 5. For `Post-Build Actions`, choose `projects to build` and select `eng110-sam-cd`.
+
+> 6. Click `Git Publisher` as well in `Post-Build-Actions`. Choose `Git Publisher` and tick `Push only if build succeeds` and `Merge results`.
+
+> 7. Click save.
+
+## Job 3
+
+> 1. Name: `eng110-sam-cd`.
+
+> 2. Link GitHub as in previous two jobs (and tick `Discard old builds` and put in 3).
+
+> 3. SSH Agent: choose the private key to unlock the EC2 instance's public key.
+
+> 4. Run these commands under `Execute shell`:
+
+    # ssh into ec2
+    # update upgrade, run the provisioning script or install nginx to test
+    # scp to copy data from github to ec2
+    ssh -A -o "StrictHostKeyChecking=no" ubuntu@63.35.252.232 << EOF	
+        #export DB_HOST=mongodb://54.75.96.210:27017/posts
+        sudo apt-get update -y
+        sudo apt-get upgrade -y
+        sudo apt-get install nginx -y
+        sudo systemctl restart nginx 
+        sudo systemctl enable nginx
+        #scp -
+        #cd folder/env/app/
+        #sudo chmod +x provision.sh
+        #sudo /.provision.sh
+        #cd app
+        #npm install 
+        #npm start
+        
+        # pm2 kill all
+    EOF
+
+
+    # Create a another job for db 
+    #```
+    # rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@ip:/home/ubuntu
+    # rsync -avz -e "ssh -o StrictHostKeyChecking=no" environment ubuntu@ip:/home/ubuntu
+    # ssh -o "StrictHostKeyChecking=no" ubuntu@ip <<EOF
+        #sudo bash ./environment/provision.sh
+        #cd app
+        #pm2 kill
+        #pm2 start app.js
+    #EOF
+    #```
+
+
