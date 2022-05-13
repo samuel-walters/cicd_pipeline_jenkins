@@ -119,6 +119,24 @@ NOTE:
     npm instal
     npm test
 
+## Webhook between GitHub and Jenkins.
 
-test commit for jenkins
+> 1. Edit your build and go to `configure`.
 
+> 2. Under `Build Triggers`, click `GitHub hook trigger for GITScm polling.
+
+> 3. Go to the GitHub repository linked to your Jenkins job, and click `settings.`
+
+> 4. Go to your `Webhooks`.
+
+> 5. Click `Add webhook`.
+
+> 6. Use the Jenkins IP, and add `github-webhook` at the end. For example, it may look like this:
+
+                http://ipaddress:port/github-webhook/
+
+> 7. Click `Let me select individual events`, and select `push` and `pull`.
+
+> 8. Click `Add webhook`.
+
+> 9. Test your webhook by pushing a commit to your GitHub repository. This should automatically trigger the Jenkins job to run.
