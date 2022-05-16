@@ -216,24 +216,54 @@ NOTE:
     # ssh into ec2
     # update upgrade, run the provisioning script or install nginx to test
     # scp to copy data from github to ec2
-    ssh -A -o "StrictHostKeyChecking=no" ubuntu@63.35.252.232 << EOF	
-        #export DB_HOST=mongodb://54.75.96.210:27017/posts
-        sudo apt-get update -y
-        sudo apt-get upgrade -y
-        sudo apt-get install nginx -y
-        sudo systemctl restart nginx 
+    rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ec2-54-75-45-88.eu-west-1.compute.amazonaws.com:~/.
+    ssh -A -o "StrictHostKeyChecking=no" ubuntu@54.75.45.88 << EOF	
+        sudo apt update -y
+        # Run upgrades
+        sudo apt upgrade -y
+        # Removes nginx
+        sudo apt-get purge nginx nginx-common -y
+        # Install nginx
+        sudo apt install nginx -y
+        # Start nginx
+        sudo systemctl start nginx
+        # Enable nginx
         sudo systemctl enable nginx
-        #scp -
-        #cd folder/env/app/
-        #sudo chmod +x provision.sh
-        #sudo /.provision.sh
-        #cd app
-        #npm install 
-        #nohup node app.js > /dev/null 2>&1 &
         
+        # Allows us to edit the file at /etc/nginx/sites-available/default
+        sudo chown ubuntu: /etc/nginx/sites-available/.
+        
+        # Deletes lines 49-51 in the default file we now have permission to
+        sed '49,51d' /etc/nginx/sites-available/default -i
+        # Inserts all the necessary lines in the default file to set up a reverse proxy for nginx
+        awk 'NR==49{print "             proxy_pass http://localhost:3000;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default
+        awk 'NR==50{print "             proxy_http_version 1.1;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default      
+        awk 'NR==51{print "             proxy_set_header Upgrade \$http_upgrade;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default
+        awk 'NR==52{print "             proxy_set_header Connection 'upgrade';"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default
+        awk 'NR==53{print "             proxy_set_header Host \$host;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default 
+        awk 'NR==54{print "             proxy_cache_bypass \$http_upgrade;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default
+        
+        # Restores the permissions we changed to edit the default file
+        sudo chown root: /etc/nginx/sites-available/.
+        sudo chown root: /etc/nginx/sites-available/default
+        
+        # restarts nginx as we have changed the default file
+        sudo systemctl restart nginx
+        
+        # Changes the directory to where we want to install the dependencies
+        cd app
+        # Installs dependencies
+        sudo apt install software-properties-common -y
+        # Gets version 12
+        curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+        # Installs nodejs
+        sudo apt-get install -y nodejs
+        npm install 
+        nohup node app.js > /dev/null 2>&1 &
+        
+        #export DB_HOST=mongodb://54.75.96.210:27017/posts
         # pm2 kill all
     EOF
-
 
     # Create a another job for db 
     #```
@@ -253,3 +283,6 @@ NOTE:
 
 test commit
 another test test
+
+
+
