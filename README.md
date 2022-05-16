@@ -229,7 +229,7 @@ NOTE:
         #sudo /.provision.sh
         #cd app
         #npm install 
-        #npm start
+        #nohup node app.js > /dev/null 2>&1 &
         
         # pm2 kill all
     EOF
