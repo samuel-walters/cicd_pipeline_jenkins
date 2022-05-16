@@ -280,12 +280,20 @@ NOTE:
         # Gets version 12
         curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
         # Installs nodejs
+        export DB_HOST=mongodb://54.154.71.119:27017/posts
+        sudo apt-get install -y nodejs
+        node seeds/seed.js
+        killall npm
+        npm install 
+        nohup node app.js > /dev/null 2>&1 &
+        
+    EOF
 
 > 5. Make sure you have spun up a new EC2 instance with these security group rules:
 
 ![](https://i.imgur.com/r55Fttv.png)
 
 test commit
-another test test 
-
-
+another test test
+test
+test
