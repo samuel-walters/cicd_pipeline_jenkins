@@ -213,7 +213,7 @@ NOTE:
 
 > 4. Run these commands under `Execute shell`:
 
-    # connect to DB
+# connect to DB
     ssh -o "StrictHostKeyChecking=no" ubuntu@54.75.88.179 << EOF
         sudo apt-get update -y
         sudo apt-get upgrade -y
@@ -241,6 +241,8 @@ NOTE:
     # scp to copy data from github to ec2
     rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ec2-54-75-45-88.eu-west-1.compute.amazonaws.com:~/.
     ssh -A -o "StrictHostKeyChecking=no" ubuntu@54.75.45.88 << EOF	
+        killall npm
+        pm2 kill
         sudo apt update -y
         # Run upgrades
         sudo apt upgrade -y
@@ -280,10 +282,9 @@ NOTE:
         # Gets version 12
         curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
         # Installs nodejs
-        export DB_HOST=mongodb://54.154.71.119:27017/posts
+        export DB_HOST=mongodb://54.75.88.179:27017/posts
         sudo apt-get install -y nodejs
         node seeds/seed.js
-        killall npm
         npm install 
         nohup node app.js > /dev/null 2>&1 &
         
