@@ -213,6 +213,29 @@ NOTE:
 
 > 4. Run these commands under `Execute shell`:
 
+    # connect to DB
+    ssh -o "StrictHostKeyChecking=no" ubuntu@54.75.88.179 << EOF
+        sudo apt-get update -y
+        sudo apt-get upgrade -y
+        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927
+        echo "deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+        sudo apt-get update -y
+        sudo apt-get upgrade -y
+        sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20
+        sudo systemctl status mongod
+        sudo systemctl start mongod
+        sudo systemctl enable mongod
+        sudo systemctl status mongod
+        sudo chown ubuntu: /etc/.
+        sed '24d' /etc/mongod.conf -i
+        awk 'NR==24{print "  bindIp: 0.0.0.0"}7' /etc/mongod.conf > change && mv change /etc/mongod.conf
+        sudo chown root: /etc/.
+        sudo systemctl restart mongod
+        sudo systemctl enable mongod
+        sudo systemctl status mongod
+        
+    EOF
+
     # ssh into ec2
     # update upgrade, run the provisioning script or install nginx to test
     # scp to copy data from github to ec2
@@ -257,25 +280,6 @@ NOTE:
         # Gets version 12
         curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
         # Installs nodejs
-        sudo apt-get install -y nodejs
-        npm install 
-        nohup node app.js > /dev/null 2>&1 &
-        
-        #export DB_HOST=mongodb://54.75.96.210:27017/posts
-        # pm2 kill all
-    EOF
-
-    # Create a another job for db 
-    #```
-    # rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@ip:/home/ubuntu
-    # rsync -avz -e "ssh -o StrictHostKeyChecking=no" environment ubuntu@ip:/home/ubuntu
-    # ssh -o "StrictHostKeyChecking=no" ubuntu@ip <<EOF
-        #sudo bash ./environment/provision.sh
-        #cd app
-        #pm2 kill
-        #pm2 start app.js
-    #EOF
-    #```
 
 > 5. Make sure you have spun up a new EC2 instance with these security group rules:
 
