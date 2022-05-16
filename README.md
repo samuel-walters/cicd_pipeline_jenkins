@@ -213,39 +213,81 @@ NOTE:
 
 > 4. Run these commands under `Execute shell`:
 
+    # connect to DB
+    ssh -o "StrictHostKeyChecking=no" ubuntu@54.75.88.179 << EOF
+        sudo apt-get update -y
+        sudo apt-get upgrade -y
+        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927
+        echo "deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+        sudo apt-get update -y
+        sudo apt-get upgrade -y
+        sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20
+        sudo systemctl status mongod
+        sudo systemctl start mongod
+        sudo systemctl enable mongod
+        sudo systemctl status mongod
+        sudo chown ubuntu: /etc/.
+        sed '24d' /etc/mongod.conf -i
+        awk 'NR==24{print "  bindIp: 0.0.0.0"}7' /etc/mongod.conf > change && mv change /etc/mongod.conf
+        sudo chown root: /etc/.
+        sudo systemctl restart mongod
+        sudo systemctl enable mongod
+        sudo systemctl status mongod
+        
+    EOF
+
     # ssh into ec2
     # update upgrade, run the provisioning script or install nginx to test
     # scp to copy data from github to ec2
-    ssh -A -o "StrictHostKeyChecking=no" ubuntu@63.35.252.232 << EOF	
-        #export DB_HOST=mongodb://54.75.96.210:27017/posts
-        sudo apt-get update -y
-        sudo apt-get upgrade -y
-        sudo apt-get install nginx -y
-        sudo systemctl restart nginx 
+    rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ec2-54-75-45-88.eu-west-1.compute.amazonaws.com:~/.
+    ssh -A -o "StrictHostKeyChecking=no" ubuntu@54.75.45.88 << EOF	
+        sudo apt update -y
+        # Run upgrades
+        sudo apt upgrade -y
+        # Removes nginx
+        sudo apt-get purge nginx nginx-common -y
+        # Install nginx
+        sudo apt install nginx -y
+        # Start nginx
+        sudo systemctl start nginx
+        # Enable nginx
         sudo systemctl enable nginx
-        #scp -
-        #cd folder/env/app/
-        #sudo chmod +x provision.sh
-        #sudo /.provision.sh
-        #cd app
-        #npm install 
-        #nohup node app.js > /dev/null 2>&1 &
         
-        # pm2 kill all
+        # Allows us to edit the file at /etc/nginx/sites-available/default
+        sudo chown ubuntu: /etc/nginx/sites-available/.
+        
+        # Deletes lines 49-51 in the default file we now have permission to
+        sed '49,51d' /etc/nginx/sites-available/default -i
+        # Inserts all the necessary lines in the default file to set up a reverse proxy for nginx
+        awk 'NR==49{print "             proxy_pass http://localhost:3000;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default
+        awk 'NR==50{print "             proxy_http_version 1.1;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default      
+        awk 'NR==51{print "             proxy_set_header Upgrade \$http_upgrade;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default
+        awk 'NR==52{print "             proxy_set_header Connection 'upgrade';"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default
+        awk 'NR==53{print "             proxy_set_header Host \$host;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default 
+        awk 'NR==54{print "             proxy_cache_bypass \$http_upgrade;"}7' /etc/nginx/sites-available/default > change && mv change /etc/nginx/sites-available/default
+        
+        # Restores the permissions we changed to edit the default file
+        sudo chown root: /etc/nginx/sites-available/.
+        sudo chown root: /etc/nginx/sites-available/default
+        
+        # restarts nginx as we have changed the default file
+        sudo systemctl restart nginx
+        
+        # Changes the directory to where we want to install the dependencies
+        cd app
+        # Installs dependencies
+        sudo apt install software-properties-common -y
+        # Gets version 12
+        curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+        # Installs nodejs
+        export DB_HOST=mongodb://54.154.71.119:27017/posts
+        sudo apt-get install -y nodejs
+        node seeds/seed.js
+        killall npm
+        npm install 
+        nohup node app.js > /dev/null 2>&1 &
+        
     EOF
-
-
-    # Create a another job for db 
-    #```
-    # rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@ip:/home/ubuntu
-    # rsync -avz -e "ssh -o StrictHostKeyChecking=no" environment ubuntu@ip:/home/ubuntu
-    # ssh -o "StrictHostKeyChecking=no" ubuntu@ip <<EOF
-        #sudo bash ./environment/provision.sh
-        #cd app
-        #pm2 kill
-        #pm2 start app.js
-    #EOF
-    #```
 
 > 5. Make sure you have spun up a new EC2 instance with these security group rules:
 
