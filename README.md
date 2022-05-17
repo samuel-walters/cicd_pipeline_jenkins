@@ -212,8 +212,8 @@ NOTE:
 > 3. SSH Agent: choose the private key to unlock the EC2 instance's public key.
 
 > 4. Run these commands under `Execute shell`:
-
-# connect to DB
+    
+    # Connect to DB
     ssh -o "StrictHostKeyChecking=no" ubuntu@54.75.88.179 << EOF
         sudo apt-get update -y
         sudo apt-get upgrade -y
