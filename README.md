@@ -8,7 +8,7 @@ CI/CD is a method used to frequently deliver apps to customers by introducing au
 
 ![](https://miro.medium.com/max/1400/0*oT8URYV7NzjEplUZ.png)
 
-Continuous integration (CI) is practice that involves developers making small changes and checks to their code. Due to the scale of requirements and the number of steps involved, this process is automated to ensure that teams can build, test, and package their applications in a reliable and repeatable way. CI helps streamline code changes, thereby increasing time for developers to make changes and contribute to improved software.
+Continuous integration (CI) is a practice that involves developers making small changes and checks to their code. Due to the scale of requirements and the number of steps involved, this process is automated to ensure that teams can build, test, and package their applications in a reliable and repeatable way. CI helps streamline code changes, thereby increasing time for developers to make changes and contribute to improved software.
 
 Furthermore, by merging and committing code to the main branch multiple times a day, you can avoid the horrendous merge conflicts that can happen if people instead wait for the release day to merge all their changes into the main branch.
 
