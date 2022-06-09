@@ -38,8 +38,6 @@ Continuous Deployment goes one step further than continuous delivery. With conti
 
 Multi Billion Dollar companies like Facebook, Netflix and Ebay have adopted Jenkins because of the advantages it brings.
 
-* Great range of plugins available.
-
 * Easy installation.
 
 * Simple and user-friendly interface
@@ -293,9 +291,3 @@ NOTE:
 > 5. Make sure you have spun up a new EC2 instance with these security group rules:
 
 ![](https://i.imgur.com/r55Fttv.png)
-
-test commit
-another test test
-test
-test
-linux command
